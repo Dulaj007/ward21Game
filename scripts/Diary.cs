@@ -62,21 +62,23 @@ public class Diary : MonoBehaviour
         }
          if (Input.GetKeyDown(KeyCode.N) )
          {
-            if (Page01.activeSelf){
-                Page02.SetActive(true);
+            if (Page03.activeSelf){
+                Page04.SetActive(true);
                 PageSound.Play();
-                Page01.SetActive(false);
+                Page03.SetActive(false);
             }
             if (Page02.activeSelf){
                 Page03.SetActive(true);
                 PageSound.Play();
                 Page02.SetActive(false);
             }
-            if (Page03.activeSelf){
-                Page04.SetActive(true);
+            if (Page01.activeSelf){
+                Page02.SetActive(true);
                 PageSound.Play();
-                Page03.SetActive(false);
+                Page01.SetActive(false);
             }
+
+
 
          }
 
