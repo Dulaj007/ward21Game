@@ -41,7 +41,8 @@ public class GoodEnding : MonoBehaviour
     }
     private void OnEnable()
     {
-        StartCoroutine(WaitForSubtitlesAndEnableContinue(5f));
+        StartCoroutine(WaitForSubtitlesAndEnableContinue(30f));
+
          if (pistolScript == null && player != null)
         {
             pistolScript = player.GetComponent<Pistol>();

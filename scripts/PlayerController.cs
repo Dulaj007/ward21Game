@@ -7,8 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public Camera playerCam;
 
-    public AudioSource backgroundSoundSource;
-    public AudioSource horrorSoundSource;
+
 
     public bool isMoving { get; private set; }
     public bool isCrouching { get; private set; }
@@ -26,11 +25,11 @@ public class PlayerController : MonoBehaviour
     public float lookXLimit = 75f;
     public float cameraRotationSmooth = 5f;
 
-    public AudioSource[] woodFootstepSources;
+    public AudioSource woodFootstepSources;
 
 
-    private AudioSource[] currentFootstepSources;
-    public Transform footstepAudioPosition;
+
+  
 
     public float crouchCameraHeight = 1f;
     public float crouchTransitionSpeed = 5f;
@@ -57,16 +56,10 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        currentFootstepSources = woodFootstepSources;
-
         initialCameraYPos = playerCam.transform.localPosition.y;
         targetCameraYPos = initialCameraYPos;
 
-        backgroundSoundSource.loop = true;
-        backgroundSoundSource.Play();
 
-        horrorSoundSource.loop = true;
-        horrorSoundSource.Stop();
     }
 
     void Update()
@@ -76,7 +69,7 @@ public class PlayerController : MonoBehaviour
         HandleZoom();
         HandleFootsteps();
         HandleCrouch();
-        HandleSoundEffects();
+
     }
 
     void HandleMovement()
@@ -166,13 +159,13 @@ public class PlayerController : MonoBehaviour
         isFootstepCoroutineRunning = true;
         while (isWalking)
         {
-            if (currentFootstepSources.Length > 0)
+            if (woodFootstepSources)
             {
-                int randomIndex = Random.Range(0, currentFootstepSources.Length);
-                AudioSource selectedSource = currentFootstepSources[randomIndex];
+              
+              
 
-                selectedSource.pitch = Random.Range(0.9f, 1.1f);
-                selectedSource.Play();
+                woodFootstepSources.pitch = Random.Range(0.9f, 1.1f);
+                woodFootstepSources.Play();
 
                 yield return new WaitForSeconds(footstepDelay);
             }
@@ -205,32 +198,4 @@ public class PlayerController : MonoBehaviour
     }
 
 
-
-    void HandleSoundEffects()
-    {
-        if (isHorror)
-        {
-            if (backgroundSoundSource.isPlaying)
-            {
-                backgroundSoundSource.Stop();
-            }
-
-            if (!horrorSoundSource.isPlaying)
-            {
-                horrorSoundSource.Play();
-            }
-        }
-        else
-        {
-            if (horrorSoundSource.isPlaying)
-            {
-                horrorSoundSource.Stop();
-            }
-
-            if (!backgroundSoundSource.isPlaying)
-            {
-                backgroundSoundSource.Play();
-            }
-        }
-    }
 }
