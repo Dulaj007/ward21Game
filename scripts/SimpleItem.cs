@@ -17,7 +17,7 @@ public class SimpleItem : MonoBehaviour
     {
         if (openText == null || CloseText == null || item == null)
         {
-            Debug.LogError("Missing references in SimpleItem script. Please assign them in the Inspector.");
+           
             enabled = false;
             return;
         }

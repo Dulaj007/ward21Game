@@ -16,16 +16,18 @@ public class MainMenuUI : MonoBehaviour
     [SerializeField] private Button settingsBtn;
     [SerializeField] private Button BugReportBtn;
     [SerializeField] private Button CreditBtn;
+    [SerializeField] private Button SkipBtn;
     [SerializeField] private GameObject settingsUI;
     [SerializeField] private AudioSource Click;
     [SerializeField] private VideoPlayer videoPlayer; 
     [SerializeField] private GameObject logo; 
     [SerializeField] private GameObject Buttons; 
     [SerializeField] private GameObject Keys; 
+
     [SerializeField] private AudioSource BackgroundSound;
     public static bool NewGame =false;
 
-
+     private bool isVieoPlaying = false; 
 
 
 
@@ -72,6 +74,8 @@ public class MainMenuUI : MonoBehaviour
         {
             CreditBtn.onClick.AddListener(OpenCreditsURL);
         }
+
+       
          if (videoPlayer != null)
         {
             videoPlayer.gameObject.SetActive(false); // Hide video player initially
@@ -82,6 +86,15 @@ public class MainMenuUI : MonoBehaviour
         }
     
 
+    }
+        void Update()
+    {
+        if (isVieoPlaying && Input.GetKeyDown(KeyCode.F))
+        {
+            SkipBtnClick();
+            
+        }
+        
     }
 
    private void OnStartButtonClicked()
@@ -119,7 +132,10 @@ public class MainMenuUI : MonoBehaviour
         Debug.Log("Waiting for the video to start...");
         yield return null;
     }
+   
     NowLoading.SetActive(false);
+    StartCoroutine(WaitForSubtitlesAndEnableSkip(10f));
+    
     Debug.Log("Video started playing...");
 
     // Wait until the video finishes playing
@@ -170,6 +186,24 @@ public class MainMenuUI : MonoBehaviour
 
         }
 
+    }
+
+    public void SkipBtnClick(){
+        NewGame = true;
+        Click.Play();
+        videoPlayer.gameObject.SetActive(false); 
+        SkipBtn.gameObject.SetActive(false);
+        videoPlayer.Stop();
+        StartNewGame();
+
+
+    }
+       private IEnumerator WaitForSubtitlesAndEnableSkip(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime); // Wait for the specified time (5 seconds)
+
+        SkipBtn.gameObject.SetActive(true);
+        isVieoPlaying = true;
     }
 
         private void OpenBugReportURL()

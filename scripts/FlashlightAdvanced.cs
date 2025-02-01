@@ -12,8 +12,8 @@ public class FlashlightToggle : MonoBehaviour
     private AudioSource audioSource;
 
     // Public AudioClip fields for the on and off sounds
-    public AudioClip flashlightOnSound;
-    public AudioClip flashlightOffSound;
+    public AudioSource flashlightOnSound;
+    public AudioSource flashlightOffSound;
 
     void Start()
     {
@@ -59,11 +59,11 @@ public class FlashlightToggle : MonoBehaviour
             {
                 if (isFlashlightOn && flashlightOnSound != null)
                 {
-                    audioSource.PlayOneShot(flashlightOnSound);
+                    flashlightOnSound.Play();
                 }
                 else if (!isFlashlightOn && flashlightOffSound != null)
                 {
-                    audioSource.PlayOneShot(flashlightOffSound);
+                    flashlightOffSound.Play();
                 }
             }
         }

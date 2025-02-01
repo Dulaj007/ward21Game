@@ -14,8 +14,6 @@ public class PlayerController : MonoBehaviour
     public bool isRunning { get; private set; }
     public bool isWalking { get; private set; }
 
-    public bool isHorror;
-
     public float walkSpeed = 3f;
     public float runSpeed = 5f;
     public float jumpPower = 0f;
@@ -47,6 +45,10 @@ public class PlayerController : MonoBehaviour
     private float rotationY = 0;
     private float initialCameraYPos;
     private float targetCameraYPos;
+      public float headBobAmount = 0.05f;
+    public float headBobSpeed = 10f;
+    private float headBobTimer = 0;
+
 
     CharacterController characterController;
 
@@ -69,6 +71,7 @@ public class PlayerController : MonoBehaviour
         HandleZoom();
         HandleFootsteps();
         HandleCrouch();
+        HandleHeadBobbing();
 
     }
 
@@ -145,7 +148,7 @@ public class PlayerController : MonoBehaviour
             if (!isWalking && !isFootstepCoroutineRunning)
             {
                 isWalking = true;
-                StartCoroutine(PlayFootstepSounds(1.9f / (isRunning ? runSpeed : walkSpeed)));
+                StartCoroutine(PlayFootstepSounds(1.3f / (isRunning ? runSpeed : walkSpeed)));
             }
         }
         else
@@ -195,6 +198,20 @@ public class PlayerController : MonoBehaviour
         Vector3 currentCamPos = playerCam.transform.localPosition;
         currentCamPos.y = Mathf.Lerp(currentCamPos.y, targetCameraYPos, Time.deltaTime * crouchTransitionSpeed);
         playerCam.transform.localPosition = currentCamPos;
+    }
+       void HandleHeadBobbing()
+    {
+        if (isMoving && characterController.isGrounded && !isCrouching)
+        {
+            headBobTimer += Time.deltaTime * headBobSpeed;
+            float bobOffset = Mathf.Sin(headBobTimer) * headBobAmount;
+            playerCam.transform.localPosition = new Vector3(playerCam.transform.localPosition.x, initialCameraYPos + bobOffset, playerCam.transform.localPosition.z);
+        }
+        else
+        {
+            headBobTimer = 0;
+            playerCam.transform.localPosition = new Vector3(playerCam.transform.localPosition.x, Mathf.Lerp(playerCam.transform.localPosition.y, initialCameraYPos, Time.deltaTime * 10f), playerCam.transform.localPosition.z);
+        }
     }
 
 

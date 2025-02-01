@@ -10,6 +10,8 @@ public class CutsceneManager : MonoBehaviour
     public SubtitleManager subtitleManager02; // Reference to SubtitleManager
     private PlayerController playerController; // Script controlling the player's movement
 
+    public GameObject TutorialUI;
+
    
 
     void Start()
@@ -44,6 +46,7 @@ public class CutsceneManager : MonoBehaviour
         {
             subtitleManager02.StartSubtitles();
         }
+        TutorialUI.SetActive(true);
     }
 
     void OnDestroy()

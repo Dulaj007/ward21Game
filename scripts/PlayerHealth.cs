@@ -75,7 +75,7 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player took damage: " + damage + ", Remaining health: " + currentHealth); // Log current health
 
 
-         UpdateBloodEffects(); // Update blood effect visuals
+          UpdateBloodEffects(); // Update blood effect visuals
 
       
         if (currentHealth <= 0)
@@ -165,17 +165,17 @@ private void UseHealthItemCoroutine()
         }
 
    
-    if (health3.activeSelf )
+    if (health3.activeSelf & UiInjection03.activeSelf)
     {
         health3.SetActive(false);
         UiInjection03.SetActive(false);
     }
-    else if (health2.activeSelf)
+    else if (health2.activeSelf & UiInjection02.activeSelf)
     {
         health2.SetActive(false);
         UiInjection02.SetActive(false);
     }
-    else if (health1.activeSelf)
+    else if (health1.activeSelf & UiInjection01.activeSelf)
     {
         health1.SetActive(false);
         UiInjection01.SetActive(false);
@@ -213,7 +213,7 @@ private void UseHealthItemCoroutine()
     public void UpdateBloodEffects()
     {
         // Deactivate all blood images first
-        DeactivateBloodEffects();
+       // DeactivateBloodEffects();
 
         // Activate images based on current health
         if (currentHealth < 80) bloodImage1.gameObject.SetActive(true);
