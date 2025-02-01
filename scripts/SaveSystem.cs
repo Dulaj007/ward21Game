@@ -8,8 +8,12 @@ using UnityEngine.SceneManagement;
 public class SaveSystem : MonoBehaviour
 {
     public GameObject player;
+
+     public GameObject LoadingSaveScreen;
     public List<GameObject> zombies = new List<GameObject>();
     public List<GameObject> doors = new List<GameObject>();
+    public GameObject saveDone;
+    public GameObject saveFailed;
 
     public Button saveButton; // Drag the Save button here in the Inspector
     public Button loadButton;
@@ -28,7 +32,7 @@ public class SaveSystem : MonoBehaviour
             saveButton.onClick.AddListener(SaveGame);
         }
        if (loadButton != null){
-           loadButton.onClick.AddListener(LoadGame);}
+           loadButton.onClick.AddListener(loadbutn);}
         else
         {
             Debug.LogWarning("Save button is not assigned in the Inspector!");
@@ -45,8 +49,9 @@ public class SaveSystem : MonoBehaviour
             
             else
             {
+                LoadingSaveScreen.SetActive(true);
                 Debug.Log("New Game is false");
-                StartCoroutine(WaitForSubtitlesAndEnableContinue(5f));
+                StartCoroutine(WaitTOLoad(5f));
                 // Perform functionality for other case
             }
 SceneManager.sceneLoaded += OnSceneLoaded;
@@ -55,11 +60,20 @@ SceneManager.sceneLoaded += OnSceneLoaded;
         
     }
 
-  private IEnumerator WaitForSubtitlesAndEnableContinue(float waitTime)
+  private IEnumerator WaitTOLoad(float waitTime)
     {
         yield return new WaitForSeconds(waitTime); // Wait for the specified time (5 seconds)
+         Debug.Log("Waiting before game load");
         LoadGame();
+        LoadingSaveScreen.SetActive(false);
     
+    }
+    public void loadbutn(){
+        LoadingSaveScreen.SetActive(true);
+        Debug.Log("New Game is false");
+        MainMenuUI.NewGame = false;
+        Loader.Load(Loader.Scene.Chapter01);
+
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -71,41 +85,56 @@ SceneManager.sceneLoaded += OnSceneLoaded;
         }
     }
 
-    public void SaveGame()
+public void SaveGame()
     {
-        GameData data = new GameData();
-
-        // Save player position
-        data.playerPosition = player.transform.position;
-         
-
-        // Save zombie data
-        foreach (var zombie in zombies)
+        try
         {
-            if (zombie != null)
+            GameData data = new GameData();
+
+            // Save player position
+            data.playerPosition = player.transform.position;
+
+            // Save zombie data
+            foreach (var zombie in zombies)
             {
-                ZombieData zData = new ZombieData
+                if (zombie != null)
                 {
-                    position = zombie.transform.position,
-                    isAlive = zombie.activeSelf // Check if zombie is active (alive)
-                };
-                data.zombies.Add(zData);
+                    ZombieData zData = new ZombieData
+                    {
+                        position = zombie.transform.position,
+                        isAlive = zombie.activeSelf
+                    };
+                    data.zombies.Add(zData);
+                }
             }
-        }
 
-        // Save door data
-        foreach (var door in doors)
-        {
-            DoorData dData = new DoorData
+            // Save door data
+            foreach (var door in doors)
             {
-                isLocked = door.activeSelf // Check if door is locked (visible)
-            };
-            data.doors.Add(dData);
-        }
+                DoorData dData = new DoorData
+                {
+                    isLocked = door.activeSelf
+                };
+                data.doors.Add(dData);
+            }
 
-        // Write to JSON file
-        File.WriteAllText(savePath, JsonUtility.ToJson(data));
-        Debug.Log("Game saved to " + savePath);
+            // Write to JSON file
+            File.WriteAllText(savePath, JsonUtility.ToJson(data));
+
+            Debug.Log("Game saved to " + savePath);
+
+            // If successful, show success message
+            saveDone.SetActive(true);
+            saveFailed.SetActive(false);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Failed to save game: " + e.Message);
+
+            // If failed, show failure message
+            saveFailed.SetActive(true);
+            saveDone.SetActive(false);
+        }
     }
 
     public string GetSavePath()

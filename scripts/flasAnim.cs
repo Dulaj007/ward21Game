@@ -7,6 +7,8 @@ public class FlashlightController : MonoBehaviour
     public Animator flashlightAnimator; // Reference to the Animator component
     public bool isFlashlightOn = false; // Tracks whether the flashlight is on or off
     public bool FlashTimer = false;
+    public AudioSource flashlightOnSound;
+    public AudioSource flashlightOffSound;
      public float WaitingTimer = 3f; 
     // Singleton instance
     public static FlashlightController Instance { get; private set; }
@@ -71,6 +73,7 @@ public class FlashlightController : MonoBehaviour
             flashlightAnimator.SetBool("FlashOff", false);
             isFlashlightOn = true;
             FlashTimer = true;
+            flashlightOnSound.Play();
 
        
         }
@@ -84,6 +87,7 @@ public class FlashlightController : MonoBehaviour
             flashlightAnimator.SetBool("FlashOff", true);
             flashlightAnimator.SetBool("FlashOn", false);
             isFlashlightOn = false;
+            flashlightOffSound.Play();
 
          
         }
